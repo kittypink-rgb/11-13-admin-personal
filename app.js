@@ -1,19 +1,56 @@
+const CLAVE_USUARIOS = 'gp_usuarios'
+
+const usuariosIniciales = [
+  { usuario: 'admin', contrasena: 'admin123', rol: 'administrador', nombre: 'Ana' },
+  { usuario: 'supervisor1', contrasena: 'super123', rol: 'supervisor', nombre: 'Carlos' },
+  { usuario: 'empleado1', contrasena: 'emple123', rol: 'empleado', nombre: 'Luisa' }
+]
+
+function inicializarUsuarios() {
+  const usuariosGuardados = localStorage.getItem(CLAVE_USUARIOS)
+
+  if (!usuariosGuardados) {
+    localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuariosIniciales))
+  }
+}
+
+inicializarUsuarios()
+
 const boton = document.querySelector('#btn-ingresar')
 const inputUsuario = document.querySelector('#usuario')
+const inputContrasena = document.querySelector('#contrasena')
 const parrafoMensaje = document.querySelector('#mensaje')
-const inputContraseña = document.querySelector('#contraseña')
 
 boton.addEventListener('click', function() {
-  const nombre = inputUsuario.value
-  const contraseña = inputContraseña.value
+  const usuarioIngresado = inputUsuario.value.trim()
+  const contrasenaIngresada = inputContrasena.value.trim()
 
-  if (nombre === '') {
-    parrafoMensaje.textContent = 'Por favor ingresá tu nombre.'
-  } else if (contraseña === '') {
-    parrafoMensaje.textContent = 'Por favor ingresá tu contraseña.'
-  } else {
-    parrafoMensaje.textContent = `Bienvenido, ${nombre}`
+  if (usuarioIngresado === '') {
+    parrafoMensaje.textContent = 'Por favor ingresá tu usuario.'
+    return
   }
- 
-})
 
+  if (contrasenaIngresada === '') {
+    parrafoMensaje.textContent = 'Por favor ingresá tu contraseña.'
+    return
+  }
+
+  const usuarios = JSON.parse(localStorage.getItem(CLAVE_USUARIOS)) || []
+
+  const usuarioEncontrado = usuarios.find(function(u) {
+    return u.usuario === usuarioIngresado && u.contrasena === contrasenaIngresada
+  })
+
+  if (!usuarioEncontrado) {
+    parrafoMensaje.textContent = 'Usuario o contraseña incorrectos.'
+    return
+  }
+
+  if (usuarioEncontrado.rol === 'administrador') {
+    parrafoMensaje.textContent = `Bienvenida ${usuarioEncontrado.nombre}. Panel: Administrador.`
+  } else if (usuarioEncontrado.rol === 'supervisor') {
+    parrafoMensaje.textContent = `Bienvenido ${usuarioEncontrado.nombre}. Panel: Supervisor.`
+  } else {
+    parrafoMensaje.textContent = `Bienvenida ${usuarioEncontrado.nombre}. Panel: Empleado.`
+  }
+})
