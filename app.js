@@ -1,7 +1,10 @@
 const CLAVE_USUARIOS = 'gp_usuarios'
 
 const usuariosIniciales = [
-  { usuario: 'admin', contrasena: 'admin123', rol: 'administrador', nombre: 'Ana' },
+  { usuario: 'malfitano', contrasena: 'admin123', rol: 'administrador', nombre: 'malfi' },
+  { usuario: 'miguel', contrasena: 'luis123', rol: 'administrador', nombre: 'miguel' },
+  { usuario: 'ruth', contrasena: '1230', rol: 'administrador', nombre: 'ruth' },
+  { usuario: 'lady', contrasena: 'lady123', rol: 'administrador', nombre: 'lady' },
   { usuario: 'supervisor1', contrasena: 'super123', rol: 'supervisor', nombre: 'Carlos' },
   { usuario: 'empleado1', contrasena: 'emple123', rol: 'empleado', nombre: 'Luisa' }
 ]
@@ -47,10 +50,12 @@ boton.addEventListener('click', function() {
   }
 
   if (usuarioEncontrado.rol === 'administrador') {
-    parrafoMensaje.textContent = `Bienvenida ${usuarioEncontrado.nombre}. Panel: Administrador.`
+    parrafoMensaje.textContent = `Bienvenido ${usuarioEncontrado.nombre}. Panel: Administrador.`
   } else if (usuarioEncontrado.rol === 'supervisor') {
     parrafoMensaje.textContent = `Bienvenido ${usuarioEncontrado.nombre}. Panel: Supervisor.`
   } else {
     parrafoMensaje.textContent = `Bienvenida ${usuarioEncontrado.nombre}. Panel: Empleado.`
   }
+
+  
 })
