@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Personal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- SECCIÓN LOGIN -->
+  <div id="login-section" class="login-container">
+    <h1>Gestor de Personal</h1>
+
+    <form id="login-form">
+      <label for="usuario">Usuario</label>
+      <input type="text" id="usuario" placeholder="Ingresá tu nombre">
+
+      <label for="contrasena">Contraseña</label>
+      <input type="password" id="contrasena" placeholder="Ingresá tu contraseña">
+
+      <button type="button" id="btn-ingresar">Ingresar</button>
+    </form>
+
+    <p id="mensaje"></p>
+  </div>
+
+  <!-- SECCIÓN DASHBOARD -->
+  <div id="dashboard-section" class="dashboard-container" style="display: none;">
+    <div class="dashboard-header">
+      <h1>Panel de Control</h1>
+      <div class="user-info">
+        <span id="nombre-usuario">Usuario</span>
+        <button id="btn-cerrar-sesion" class="btn-logout">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <p id="bienvenida"></p>
+      <div id="panel-admin" class="panel-role" style="display: none;">
+        <h2>Panel Administrador</h2>
+        <p>Tienes acceso total al sistema.</p>
+      </div>
+
+      <div id="panel-supervisor" class="panel-role" style="display: none;">
+        <h2>Panel Supervisor</h2>
+        <p>Puedes supervisar empleados.</p>
+      </div>
+
+      <div id="panel-empleado" class="panel-role" style="display: none;">
+        <h2>Panel Empleado</h2>
+        <p>Vista limitada de tus datos.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
