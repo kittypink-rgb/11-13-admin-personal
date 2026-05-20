@@ -20,7 +20,7 @@ Y si algo no funciona a la primera... **bienvenido al mundo de ser programador.*
 
 ---
 
-**Por ahora, a trabajar.** Las tareas están ahí. Completa tarea 3, probá bien, y cuando esté lista, avisale a tu profe.
+**Por ahora, a trabajar.** Las tareas están ahí. Prueba bien la tarea 3, y cualquier cosa que no funcione, avísale al profe o avísale a tus papás.
 
-¡Vos podes!
+¡Tú puedes!
 
