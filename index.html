@@ -71,9 +71,34 @@
         <input type="number" id="emp-salario" placeholder="Ej: 3000000" min="0" required>
       </div>
 
+
       <button type="button" id="btn-agregar-empleado" class="btn-primary">
         Agregar empleado
       </button>
+
+      <div class="table-section">
+  <h3>Lista de empleados</h3>
+  
+  <table id="tabla-empleados" class="tabla-empleados">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Puesto</th>
+        <th>Departamento</th>
+        <th>Salario</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="cuerpo-tabla">
+      <!-- Se llena con JavaScript -->
+    </tbody>
+  </table>
+
+  <p id="sin-empleados" class="sin-datos">No hay empleados registrados.</p>
+</div>
+
+
     </form>
 
     <p id="mensaje-empleado" class="mensaje-resultado"></p>
@@ -98,5 +123,52 @@
   </div>
 
   <script src="app.js"></script>
+  <!-- MODAL PARA EDITAR EMPLEADO -->
+<div id="modal-editar" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Editar empleado</h2>
+      <button class="close-modal">&times;</button>
+    </div>
+
+    <form id="formulario-editar">
+      <div class="form-group">
+        <label for="edit-nombre">Nombre</label>
+        <input type="text" id="edit-nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-puesto">Puesto</label>
+        <input type="text" id="edit-puesto" required>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-departamento">Departamento</label>
+        <select id="edit-departamento" required>
+          <option value="IT">IT</option>
+          <option value="Diseño">Diseño</option>
+          <option value="Ventas">Ventas</option>
+          <option value="Recursos Humanos">Recursos Humanos</option>
+          <option value="Finanzas">Finanzas</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-salario">Salario</label>
+        <input type="number" id="edit-salario" required>
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" class="btn-guardar" id="btn-guardar-edicion">
+          Guardar cambios
+        </button>
+        <button type="button" class="btn-cancelar" id="btn-cancelar-edicion">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>

@@ -72,10 +72,18 @@ function mostrarDashboard(sesion) {
   document.getElementById('dashboard-section').style.display = 'block'
   document.getElementById('nombre-usuario').textContent = sesion.nombre
   document.getElementById('bienvenida').textContent = `Bienvenido ${sesion.nombre} (${sesion.rol})`
-  document.getElementById('panel-admin').style.display = sesion.rol === 'administrador' ? 'block' : 'none'
+  
+  const esAdmin = sesion.rol === 'administrador'
+  document.getElementById('panel-admin').style.display = esAdmin ? 'block' : 'none'
   document.getElementById('panel-supervisor').style.display = sesion.rol === 'supervisor' ? 'block' : 'none'
   document.getElementById('panel-empleado').style.display = sesion.rol === 'empleado' ? 'block' : 'none'
+
+  // Renderizar tabla solo si es admin
+  if (esAdmin) {
+    renderizarTablaEmpleados()
+  }
 }
+
 function obtenerIdNuevo() {
   const empleados = JSON.parse(localStorage.getItem(CLAVE_EMPLEADOS)) || []
   if (empleados.length === 0) return 1
@@ -98,6 +106,32 @@ function agregarEmpleado(nombre, puesto, departamento, salario) {
 
   return nuevoEmpleado
 }
+
+function obtenerEmpleados() {
+  return JSON.parse(localStorage.getItem(CLAVE_EMPLEADOS)) || []
+}
+
+function eliminarEmpleado(id) {
+  let empleados = obtenerEmpleados()
+  empleados = empleados.filter(e => e.id !== id)
+  localStorage.setItem(CLAVE_EMPLEADOS, JSON.stringify(empleados))
+}
+
+function actualizarEmpleado(id, nombre, puesto, departamento, salario) {
+  let empleados = obtenerEmpleados()
+  const empleado = empleados.find(e => e.id === id)
+  
+  if (empleado) {
+    empleado.nombre = nombre
+    empleado.puesto = puesto
+    empleado.departamento = departamento
+    empleado.salario = parseInt(salario)
+    localStorage.setItem(CLAVE_EMPLEADOS, JSON.stringify(empleados))
+    return true
+  }
+  return false
+}
+
 
 const boton = document.querySelector('#btn-ingresar')
 const inputUsuario = document.querySelector('#usuario')
@@ -207,4 +241,104 @@ btnAgregarEmpleado.addEventListener('click', function() {
     mensajeEmpleado.textContent = ''
     mensajeEmpleado.classList.remove('success', 'error')
   }, 3000)
+})
+
+function renderizarTablaEmpleados() {
+  const empleados = obtenerEmpleados()
+  const cuerpoTabla = document.getElementById('cuerpo-tabla')
+  const sinEmpleados = document.getElementById('sin-empleados')
+  
+  cuerpoTabla.innerHTML = ''
+
+  if (empleados.length === 0) {
+    sinEmpleados.style.display = 'block'
+    return
+  }
+
+  sinEmpleados.style.display = 'none'
+
+  empleados.forEach(function(empleado) {
+    const fila = document.createElement('tr')
+    
+    fila.innerHTML = `
+      <td>${empleado.id}</td>
+      <td>${empleado.nombre}</td>
+      <td>${empleado.puesto}</td>
+      <td>${empleado.departamento}</td>
+      <td>$${empleado.salario.toLocaleString()}</td>
+      <td>
+        <div class="btn-grupo">
+          <button class="btn-editar" onclick="abrirModalEditar(${empleado.id})">
+            Editar
+          </button>
+          <button class="btn-eliminar" onclick="confirmarEliminar(${empleado.id})">
+            Eliminar
+          </button>
+        </div>
+      </td>
+    `
+    
+    cuerpoTabla.appendChild(fila)
+  })
+}
+
+let empleadoEnEdicion = null
+
+function abrirModalEditar(id) {
+  const empleados = obtenerEmpleados()
+  empleadoEnEdicion = empleados.find(e => e.id === id)
+
+  if (empleadoEnEdicion) {
+    document.getElementById('edit-nombre').value = empleadoEnEdicion.nombre
+    document.getElementById('edit-puesto').value = empleadoEnEdicion.puesto
+    document.getElementById('edit-departamento').value = empleadoEnEdicion.departamento
+    document.getElementById('edit-salario').value = empleadoEnEdicion.salario
+    
+    document.getElementById('modal-editar').style.display = 'block'
+  }
+}
+
+function cerrarModalEditar() {
+  document.getElementById('modal-editar').style.display = 'none'
+  empleadoEnEdicion = null
+}
+
+function confirmarEliminar(id) {
+  if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
+    eliminarEmpleado(id)
+    renderizarTablaEmpleados()
+  }
+}
+
+// MODAL EDITAR
+const modalEditar = document.getElementById('modal-editar')
+const btnGuardarEdicion = document.getElementById('btn-guardar-edicion')
+const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion')
+const closeModal = document.querySelector('.close-modal')
+
+closeModal.addEventListener('click', cerrarModalEditar)
+
+btnCancelarEdicion.addEventListener('click', cerrarModalEditar)
+
+btnGuardarEdicion.addEventListener('click', function() {
+  const nombre = document.getElementById('edit-nombre').value.trim()
+  const puesto = document.getElementById('edit-puesto').value.trim()
+  const departamento = document.getElementById('edit-departamento').value.trim()
+  const salario = document.getElementById('edit-salario').value.trim()
+
+  if (nombre === '' || puesto === '' || departamento === '' || salario === '') {
+    alert('Por favor completa todos los campos.')
+    return
+  }
+
+  actualizarEmpleado(empleadoEnEdicion.id, nombre, puesto, departamento, salario)
+  cerrarModalEditar()
+  renderizarTablaEmpleados()
+})
+
+// Cerrar modal si clickea fuera del contenido
+window.addEventListener('click', function(event) {
+  if (event.target === modalEditar) {
+    cerrarModalEditar()
+  }
 })
