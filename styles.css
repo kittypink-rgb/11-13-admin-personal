@@ -66,21 +66,18 @@ button:hover {
   font-weight: bold;
 }
 
-
-
-
-
+/*admin
 
 /* DASHBOARD */
 .dashboard-container {
   width: 100%;
   min-height: 100vh;
-  background-color: #f0f2f5;
+  background-color: #9aeefd;
   padding: 20px;
 }
 
 .dashboard-header {
-  background-color: white;
+  background-color: #9aeefd;
   padding: 20px;
   border-radius: 8px;
   display: flex;
@@ -104,12 +101,12 @@ button:hover {
 
 .user-info span {
   font-weight: bold;
-  color: #8fa0e7;
+  color: #0a5b5e;
 }
 
 .btn-logout {
   padding: 8px 16px;
-  background-color: #e986c3;
+  background-color: #8ac0f3;
   color: white;
   border: none;
   border-radius: 4px;
@@ -118,7 +115,7 @@ button:hover {
 }
 
 .btn-logout:hover {
-  background-color: #e986c3;
+  background-color: #778dd3;
 }
 
 .dashboard-content {
@@ -187,13 +184,13 @@ button:hover {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #4361ee;
+  border-color: #778deb;
   box-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
 }
 
 .btn-primary {
   padding: 12px;
-  background-color: #4361ee;
+  background-color: #778deb;
   color: white;
   border: none;
   border-radius: 4px;
@@ -204,7 +201,7 @@ button:hover {
 }
 
 .btn-primary:hover {
-  background-color: #3a52d4;
+  background-color: #6d81d8;
 }
 
 .mensaje-resultado {
@@ -258,7 +255,7 @@ button:hover {
 }
 
 .tabla-empleados thead {
-  background-color: #4361ee;
+  background-color: #778deb;
   color: white;
 }
 
@@ -294,21 +291,21 @@ button:hover {
 }
 
 .btn-editar {
-  background-color: #fbbf24;
+  background-color: #eed189;
   color: white;
 }
 
 .btn-editar:hover {
-  background-color: #f59e0b;
+  background-color: #eed189;
 }
 
 .btn-eliminar {
-  background-color: #ef476f;
+  background-color: #e95f80;
   color: white;
 }
 
 .btn-eliminar:hover {
-  background-color: #d63654;
+  background-color: #e95f80;
 }
 
 .sin-datos {
@@ -389,12 +386,12 @@ button:hover {
 }
 
 .btn-guardar {
-  background-color: #4361ee;
+  background-color: #7b8fe9;
   color: white;
 }
 
 .btn-guardar:hover {
-  background-color: #3a52d4;
+  background-color: #697ac7;
 }
 
 .btn-cancelar {
