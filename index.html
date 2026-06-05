@@ -75,10 +75,32 @@
       <button type="button" id="btn-agregar-empleado" class="btn-primary">
         Agregar empleado
       </button>
+    </form>
 
-      <div class="table-section">
+    <p id="mensaje-empleado" class="mensaje-resultado"></p>
+
+    <div class="table-section">
   <h3>Lista de empleados</h3>
-  
+
+  <div class="table-controls">
+    <div class="form-group">
+      <label for="buscar-empleado">Buscar por nombre o puesto</label>
+      <input type="text" id="buscar-empleado" placeholder="Ej: Juan o Desarrollador">
+    </div>
+
+    <div class="form-group">
+      <label for="filtro-departamento">Filtrar por departamento</label>
+      <select id="filtro-departamento">
+        <option value="">Todos los departamentos</option>
+        <option value="IT">IT</option>
+        <option value="Diseño">Diseño</option>
+        <option value="Ventas">Ventas</option>
+        <option value="Recursos Humanos">Recursos Humanos</option>
+        <option value="Finanzas">Finanzas</option>
+      </select>
+    </div>
+  </div>
+
   <table id="tabla-empleados" class="tabla-empleados">
     <thead>
       <tr>
@@ -95,22 +117,12 @@
     </tbody>
   </table>
 
-  <p id="sin-empleados" class="sin-datos">No hay empleados registrados.</p>
+  <p id="sin-empleados" class="sin-datos">No hay empleados registrados. Agregá el primero usando el formulario superior.</p>
 </div>
-
-
-    </form>
-
-    <p id="mensaje-empleado" class="mensaje-resultado"></p>
   </div>
 </div>
 
       <div id="panel-supervisor" class="panel-role" style="display: none;">
-        <h2>Panel Supervisor</h2>
-        <p>Puedes supervisar empleados.</p>
-      </div>
-
-            <div id="panel-supervisor" class="panel-role" style="display: none;">
         <h2>Panel Supervisor</h2>
         <p>Puedes supervisar empleados.</p>
       </div>
@@ -122,7 +134,6 @@
 
   </div>
 
-  <script src="app.js"></script>
   <!-- MODAL PARA EDITAR EMPLEADO -->
 <div id="modal-editar" class="modal">
   <div class="modal-content">
@@ -170,5 +181,6 @@
   </div>
 </div>
 
+  <script src="app.js"></script>
 </body>
 </html>

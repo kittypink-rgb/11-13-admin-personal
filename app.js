@@ -174,19 +174,49 @@ document.getElementById('btn-cerrar-sesion').addEventListener('click', function(
   parrafoMensaje.textContent = 'Sesión cerrada correctamente.'
 })
 
-const sesionActual = obtenerSesion()
-if (sesionActual) {
-  mostrarDashboard(sesionActual)
-} else {
-  mostrarLogin()
-}
-
-
-
 // AGREGAR EMPLEADO
 const btnAgregarEmpleado = document.getElementById('btn-agregar-empleado')
-const formularioEmpleado = document.getElementById('formulario-empleado')
 const mensajeEmpleado = document.getElementById('mensaje-empleado')
+const inputBuscarEmpleado = document.getElementById('buscar-empleado')
+const filtroDepartamento = document.getElementById('filtro-departamento')
+
+function mostrarMensajeEmpleado(texto, tipo) {
+  mensajeEmpleado.textContent = texto
+  mensajeEmpleado.classList.remove('success', 'error')
+  mensajeEmpleado.classList.add(tipo)
+}
+
+function limpiarMensajeEmpleado() {
+  mensajeEmpleado.textContent = ''
+  mensajeEmpleado.classList.remove('success', 'error')
+}
+
+function normalizarTexto(texto) {
+  return texto.toLowerCase().trim()
+}
+
+function existeEmpleadoDuplicado(nombre, idIgnorado = null) {
+  const nombreNormalizado = normalizarTexto(nombre)
+  return obtenerEmpleados().some(function(empleado) {
+    return empleado.id !== idIgnorado && normalizarTexto(empleado.nombre) === nombreNormalizado
+  })
+}
+
+function obtenerEmpleadosFiltrados() {
+  const busqueda = normalizarTexto(inputBuscarEmpleado.value)
+  const departamentoSeleccionado = filtroDepartamento.value
+
+  return obtenerEmpleados().filter(function(empleado) {
+    const coincideBusqueda =
+      normalizarTexto(empleado.nombre).includes(busqueda) ||
+      normalizarTexto(empleado.puesto).includes(busqueda)
+
+    const coincideDepartamento =
+      departamentoSeleccionado === '' || empleado.departamento === departamentoSeleccionado
+
+    return coincideBusqueda && coincideDepartamento
+  })
+}
 
 btnAgregarEmpleado.addEventListener('click', function() {
   const nombre = document.getElementById('emp-nombre').value.trim()
@@ -195,40 +225,40 @@ btnAgregarEmpleado.addEventListener('click', function() {
   const salario = document.getElementById('emp-salario').value.trim()
 
   // Limpiar mensaje anterior
-  mensajeEmpleado.textContent = ''
-  mensajeEmpleado.classList.remove('success', 'error')
+  limpiarMensajeEmpleado()
 
   // Validar campos
-  if (nombre === '') {
-    mensajeEmpleado.textContent = 'Por favor ingresá el nombre.'
-    mensajeEmpleado.classList.add('error')
+  if (nombre.length < 3) {
+    mostrarMensajeEmpleado('El nombre debe tener al menos 3 caracteres.', 'error')
     return
   }
 
   if (puesto === '') {
-    mensajeEmpleado.textContent = 'Por favor ingresá el puesto.'
-    mensajeEmpleado.classList.add('error')
+    mostrarMensajeEmpleado('Por favor ingresá el puesto.', 'error')
     return
   }
 
   if (departamento === '') {
-    mensajeEmpleado.textContent = 'Por favor seleccioná un departamento.'
-    mensajeEmpleado.classList.add('error')
+    mostrarMensajeEmpleado('Por favor seleccioná un departamento.', 'error')
     return
   }
 
   if (salario === '' || isNaN(salario) || salario <= 0) {
-    mensajeEmpleado.textContent = 'Por favor ingresá un salario válido.'
-    mensajeEmpleado.classList.add('error')
+    mostrarMensajeEmpleado('Por favor ingresá un salario mayor a cero.', 'error')
+    return
+  }
+
+  if (existeEmpleadoDuplicado(nombre)) {
+    mostrarMensajeEmpleado('Ya existe un empleado con ese nombre.', 'error')
     return
   }
 
   // Agregar el empleado
-  const empleado = agregarEmpleado(nombre, puesto, departamento, salario)
+  agregarEmpleado(nombre, puesto, departamento, salario)
+  renderizarTablaEmpleados()
 
   // Mostrar éxito
-  mensajeEmpleado.textContent = `✓ Empleado ${nombre} agregado correctamente.`
-  mensajeEmpleado.classList.add('success')
+  mostrarMensajeEmpleado(`✓ Empleado ${nombre} agregado correctamente.`, 'success')
 
   // Limpiar formulario
   document.getElementById('emp-nombre').value = ''
@@ -238,19 +268,22 @@ btnAgregarEmpleado.addEventListener('click', function() {
 
   // Ocultar mensaje después de 3 segundos
   setTimeout(function() {
-    mensajeEmpleado.textContent = ''
-    mensajeEmpleado.classList.remove('success', 'error')
+    limpiarMensajeEmpleado()
   }, 3000)
 })
 
 function renderizarTablaEmpleados() {
-  const empleados = obtenerEmpleados()
+  const empleados = obtenerEmpleadosFiltrados()
+  const totalEmpleados = obtenerEmpleados().length
   const cuerpoTabla = document.getElementById('cuerpo-tabla')
   const sinEmpleados = document.getElementById('sin-empleados')
   
   cuerpoTabla.innerHTML = ''
 
   if (empleados.length === 0) {
+    sinEmpleados.textContent = totalEmpleados === 0
+      ? 'No hay empleados registrados. Agregá el primero usando el formulario superior.'
+      : 'No hay empleados que coincidan con la búsqueda o el filtro seleccionado.'
     sinEmpleados.style.display = 'block'
     return
   }
@@ -307,8 +340,12 @@ function confirmarEliminar(id) {
   if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
     eliminarEmpleado(id)
     renderizarTablaEmpleados()
+    mostrarMensajeEmpleado('✓ Empleado eliminado correctamente.', 'success')
   }
 }
+
+inputBuscarEmpleado.addEventListener('input', renderizarTablaEmpleados)
+filtroDepartamento.addEventListener('change', renderizarTablaEmpleados)
 
 // MODAL EDITAR
 const modalEditar = document.getElementById('modal-editar')
@@ -321,19 +358,40 @@ closeModal.addEventListener('click', cerrarModalEditar)
 btnCancelarEdicion.addEventListener('click', cerrarModalEditar)
 
 btnGuardarEdicion.addEventListener('click', function() {
+  if (!empleadoEnEdicion) {
+    alert('No hay ningún empleado seleccionado para editar.')
+    return
+  }
+
   const nombre = document.getElementById('edit-nombre').value.trim()
   const puesto = document.getElementById('edit-puesto').value.trim()
   const departamento = document.getElementById('edit-departamento').value.trim()
   const salario = document.getElementById('edit-salario').value.trim()
 
-  if (nombre === '' || puesto === '' || departamento === '' || salario === '') {
+  if (nombre.length < 3) {
+    alert('El nombre debe tener al menos 3 caracteres.')
+    return
+  }
+
+  if (puesto === '' || departamento === '') {
     alert('Por favor completa todos los campos.')
+    return
+  }
+
+  if (salario === '' || isNaN(salario) || salario <= 0) {
+    alert('Por favor ingresá un salario mayor a cero.')
+    return
+  }
+
+  if (existeEmpleadoDuplicado(nombre, empleadoEnEdicion.id)) {
+    alert('Ya existe otro empleado con ese nombre.')
     return
   }
 
   actualizarEmpleado(empleadoEnEdicion.id, nombre, puesto, departamento, salario)
   cerrarModalEditar()
   renderizarTablaEmpleados()
+  mostrarMensajeEmpleado(`✓ Empleado ${nombre} actualizado correctamente.`, 'success')
 })
 
 // Cerrar modal si clickea fuera del contenido
@@ -342,3 +400,10 @@ window.addEventListener('click', function(event) {
     cerrarModalEditar()
   }
 })
+
+const sesionActual = obtenerSesion()
+if (sesionActual) {
+  mostrarDashboard(sesionActual)
+} else {
+  mostrarLogin()
+}

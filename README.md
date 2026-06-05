@@ -49,6 +49,7 @@ Aplicar los conceptos fundamentales de JavaScript en un proyecto real:
 - [ ] Estructura HTML base
 - [ ] Estilos y diseño
 - [ ] Lógica de autenticación por rol
-- [ ] Gestión de empleados (CRUD)
+- [x] Gestión de empleados (CRUD)
+- [x] Búsqueda, filtros y validaciones del CRUD de empleados
 - [ ] Control de asistencia
 - [ ] Gestión de pagos y nómina

@@ -243,6 +243,13 @@ button:hover {
   font-size: 18px;
 }
 
+.table-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
 .tabla-empleados {
   width: 100%;
   border-collapse: collapse;
@@ -397,4 +404,26 @@ button:hover {
 
 .btn-cancelar:hover {
   background-color: #bbb;
+}
+
+@media (max-width: 700px) {
+  body {
+    align-items: flex-start;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .dashboard-header,
+  .user-info,
+  .table-controls,
+  .modal-buttons {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tabla-empleados {
+    display: block;
+    overflow-x: auto;
+  }
 }
